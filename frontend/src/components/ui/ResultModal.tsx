@@ -74,6 +74,7 @@ export default function ResultModal({
   const sortedFactors = Object.entries(shapValues)
     .sort(([, a], [, b]) => Math.abs(b) - Math.abs(a))
     .slice(0, 6);
+  const maxShapMagnitude = Math.max(...sortedFactors.map(([, value]) => Math.abs(value)), 0.001);
 
   return (
     <>
@@ -128,20 +129,21 @@ export default function ResultModal({
                 {/* Influence factors */}
                 <div className="col-md-6">
                   <div className="detail-card">
-                    <div className="detail-card-title">Facteurs d'influence principaux</div>
+                    <div className="detail-card-title">Contributions SHAP au score brut</div>
+                    <p className="small text-secondary">Log-odds avant calibration : + augmente le score brut, - le diminue. Ces valeurs ne sont pas des pourcentages.</p>
                     {sortedFactors.map(([key, value]) => (
                       <div className="factor-row" key={key}>
                         <div className="factor-header">
                           <span>{factorNames[key] || key}</span>
                           <span className="factor-value">
                             {value >= 0 ? '+' : ''}
-                            {Math.round(Math.abs(value) * 100)}%
+                            {value.toFixed(3)}
                           </span>
                         </div>
                         <div className="progress-custom">
                           <div
                             className="progress-custom-bar"
-                            style={{ width: `${Math.min(Math.abs(value) * 100, 100)}%` }}
+                            style={{ width: `${Math.abs(value) / maxShapMagnitude * 100}%`, backgroundColor: value >= 0 ? '#b42318' : '#175cd3' }}
                           ></div>
                         </div>
                       </div>

@@ -15,19 +15,23 @@ except ImportError:
 
 app = FastAPI()
 ROOT = Path(__file__).resolve().parent
-model = scaler = None
 try:
-    scaler = joblib.load(ROOT / 'scaler.pkl')
-    model = joblib.load(ROOT / 'xgboost_diabetes_model.pkl')
-    if scaler.n_features_in_ != len(FEATURES) or model.n_features_in_ != len(FEATURES):
-        raise ValueError('Incompatible feature count')
-    if list(getattr(scaler, 'feature_names_in_', CSV_FEATURES)) != CSV_FEATURES:
-        raise ValueError('Incompatible feature order')
-    if list(model.classes_) != [0, 1]:
-        raise ValueError('Expected binary classes [0, 1]')
+    from .artifacts import load_runtime, calibrated_probability
+except ImportError:
+    from artifacts import load_runtime, calibrated_probability
+
+model = scaler = calibrator = None
+model_info = {'mode': 'unavailable'}
+try:
+    model, scaler, calibrator, model_info = load_runtime(ROOT)
 except Exception:
-    logging.exception('Cannot load legacy artifacts')
-    model = scaler = None
+    logging.exception('Cannot load configured ML artifacts')
+
+@app.get('/model-info')
+def get_model_info():
+    if model is None:
+        raise HTTPException(503, 'ML artifacts unavailable')
+    return model_info
 
 class PredictionRequest(BaseModel):
     highBp: bool
@@ -70,12 +74,13 @@ def predict_risk(request: PredictionRequest):
     features = np.array([[float(row[name]) for name in FEATURES]])
     try:
         scaled = scaler.transform(pd.DataFrame(features, columns=CSV_FEATURES))
-        score = float(model.predict_proba(scaled)[0, 1])
+        raw_score = float(model.predict_proba(scaled)[0, 1])
+        score = float(calibrated_probability(calibrator, np.asarray([raw_score], dtype=np.float32))[0])
         contributions = tree_shap(model, scaled)[0]
         if not np.isfinite(contributions).all() or not np.isfinite(score):
             raise ValueError('Non-finite inference')
         reconstructed = 1 / (1 + np.exp(-float(contributions.sum())))
-        np.testing.assert_allclose(reconstructed, score, atol=1e-5)
+        np.testing.assert_allclose(reconstructed, raw_score, atol=1e-5)
     except Exception as exc:
         logging.exception('ML inference failed')
         raise HTTPException(503, 'ML inference unavailable') from exc
@@ -85,4 +90,7 @@ def predict_risk(request: PredictionRequest):
         'shapValuesAsJsonString': json.dumps(dict(zip(FEATURES, map(float, contributions[:-1]))), allow_nan=False),
         'shapBaseValue': float(contributions[-1]),
         'shapOutputSpace': 'log_odds',
+        'rawModelProbability': raw_score,
+        'modelArtifactSha256': model_info.get('artifact_sha256'),
+        'probabilityCalibration': 'sigmoid' if calibrator is not None else 'none',
     }

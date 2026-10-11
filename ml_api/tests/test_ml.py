@@ -34,7 +34,7 @@ class MLTests(unittest.TestCase):
             values = json.loads(body['shapValuesAsJsonString'])
             self.assertEqual(list(values), FEATURES)
             margin = body['shapBaseValue'] + sum(values.values())
-            self.assertAlmostEqual(1 / (1 + np.exp(-margin)), body['riskScore'], places=5)
+            self.assertAlmostEqual(1 / (1 + np.exp(-margin)), body['rawModelProbability'], places=5)
             self.assertEqual(body['shapOutputSpace'], 'log_odds')
         with patch.object(main, 'model', None):
             self.assertEqual(client.post('/predict', json=self.payload()).status_code, 503)
@@ -72,9 +72,48 @@ class MLTests(unittest.TestCase):
             b = (namespace['cv_summary'], namespace['test_metrics'], namespace['manifest'])
             pd.testing.assert_frame_equal(a[1],b[1])
             self.assertEqual(a[2]['train_rows'], b[2]['train_rows'])
-            self.assertEqual(len(a[1]),4)
+            self.assertEqual(len(a[1]),10)
             with self.assertRaises(FileExistsError):
                 run_experiment(csv,folder / 'a')
+            from ml_api.artifacts import load_runtime, json_sha256
+            config = {'artifact_path':'a/api_bundle.joblib',
+                      'artifact_sha256':a[2]['api_artifact']['sha256'],
+                      'dataset_sha256':a[2]['csv_sha256']}
+            config_path = folder / 'active_artifact.json'
+            config_path.write_text(json.dumps(config), encoding='utf-8')
+            candidate_model, candidate_scaler, candidate_calibrator, info = load_runtime(folder)
+            predictions = pd.read_csv(folder / 'a' / (a[2]['api_model_name'] + '_predictions.csv'))
+            clean = frame.drop_duplicates().reset_index(drop=True)
+            with patch.multiple(main, model=candidate_model, scaler=candidate_scaler,
+                                calibrator=candidate_calibrator, model_info=info):
+                client = TestClient(main.app)
+                for _, record in predictions.iloc[:10].iterrows():
+                    source = clean.iloc[int(record['row'])]
+                    payload = dict(zip(FEATURES, source[CSV_FEATURES].tolist()))
+                    payload['sex'] = 'MALE' if payload['sex'] else 'FEMALE'
+                    response = client.post('/predict', json=payload)
+                    self.assertEqual(response.status_code, 200, response.text)
+                    self.assertAlmostEqual(response.json()['riskScore'], record['probability'], places=10)
+                    self.assertEqual(response.json()['modelArtifactSha256'], config['artifact_sha256'])
+                self.assertEqual(client.get('/model-info').json()['evaluation']['dataset_sha256'], a[2]['csv_sha256'])
+            config['evaluation_manifest'] = 'a/manifest.json'
+            config['evaluation_manifest_sha256'] = json_sha256(folder / 'a' / 'manifest.json')
+            config_path.write_text(json.dumps(config), encoding='utf-8')
+            load_runtime(folder)
+            manifest_path = folder / 'a' / 'manifest.json'
+            original_manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+            # Newline changes from a Git checkout must not change JSON identity.
+            manifest_path.write_bytes(json.dumps(original_manifest, indent=2).replace('\n','\r\n').encode('utf-8'))
+            load_runtime(folder)
+            altered = json.loads(manifest_path.read_text(encoding='utf-8'))
+            altered['api_artifact']['metrics']['roc_auc'] = -1
+            manifest_path.write_text(json.dumps(altered), encoding='utf-8')
+            config['evaluation_manifest_sha256'] = json_sha256(manifest_path)
+            config_path.write_text(json.dumps(config), encoding='utf-8')
+            with self.assertRaises(ValueError): load_runtime(folder)
+            config['artifact_sha256'] = 'bad-hash'
+            config_path.write_text(json.dumps(config), encoding='utf-8')
+            with self.assertRaises(ValueError): load_runtime(folder)
             frame.loc[0,'Age'] = 45
             frame.to_csv(csv,index=False)
             with self.assertRaises(ValueError):

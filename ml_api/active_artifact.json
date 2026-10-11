@@ -1,0 +1,8 @@
+{
+  "artifact_path": "releases/uci_891_seed42/api_bundle.joblib",
+  "artifact_sha256": "5f55d74b4315933ae3fb72c00b969b0234875f9de519794d4c06985fcbfce3f1",
+  "dataset_sha256": "9f71fda9d4ae5f4878c99b9233b6a16accfa9a17c194116a6b78100540934964",
+  "evaluation_manifest": "releases/uci_891_seed42/manifest.json",
+  "evaluation_manifest_sha256": "379803336d550733958adbe9f96bb5f1aa26cc48adf2bda85e09bff9ac927570",
+  "evaluation_manifest_hash_format": "canonical-json-v1"
+}

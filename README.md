@@ -1,9 +1,17 @@
-# PFE ? Pr?diction du risque de diab?te
+# DiabeteRisk - PFA 2026
 
-Projet compos? de `frontend` (React), `backend_v2` (Spring Boot) et `ml_api` (FastAPI/XGBoost).
+DiabeteRisk est une application web realisee dans le cadre du Projet de Fin d'Annee (PFA) 2026. Elle permet de saisir des informations de sante, d'obtenir un score estime par un modele de machine learning et de consulter les facteurs qui influencent ce score.
 
-La partie ML est documentee dans [ml_api/README.md](ml_api/README.md). Le [notebook execute](ml_api/training.ipynb) compare XGBoost, XGBoost + SMOTENC et trois references sur un jeu public reel UCI documente. Les [resultats mesures](ml_api/releases/uci_891_seed42/RESULTS.md) comprennent discrimination, rappel/F1 et calibration. L?API charge le meme bundle evalue, controle par SHA-256, avec vrais TreeSHAP. Les deux anciens fichiers restent conserves.
+Le parcours utilisateur comprend la creation de compte, la connexion, la gestion du profil, un formulaire de prediction, un tableau de bord et un historique des analyses. Un espace administrateur permet de consulter les utilisateurs, les predictions et les statistiques de l'application.
 
-Pour le backend, copier `backend_v2/application-local.properties.example` vers `backend_v2/application-local.properties` et renseigner les identifiants locaux, ou d?finir `DB_PASSWORD`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `JWT_SECRET`. Le fichier local est ignor? par Git. Lancer Maven depuis `backend_v2`. La cl? JWT doit contenir au moins 32 octets.
+Le projet repose sur trois parties :
 
-Les donn?es SQL de d?monstration et les exemples pr?sents dans le projet ne sont pas des r?sultats d??valuation ML.
+- **frontend** : interface React et TypeScript pour les utilisateurs et les administrateurs.
+- **backend_v2** : API Spring Boot qui gere les comptes, l'authentification JWT et les donnees stockees dans PostgreSQL.
+- **ml_api** : API FastAPI qui calcule les scores avec XGBoost et explique les predictions avec SHAP.
+
+Le formulaire utilise 17 indicateurs de sante et de mode de vie, dont la tension arterielle, le cholesterol, le BMI, l'activite physique et la categorie d'age. L'interface transmet ces informations au backend, qui interroge le service ML puis enregistre le resultat dans l'historique.
+
+La partie ML compare XGBoost a des modeles de reference et inclut une variante avec SMOTENC pour le traitement du desequilibre des classes. L'API utilise le modele evalue avec son scaler et son calibrateur. Les contributions SHAP expliquent le score brut du modele.
+
+L'experience publique utilise CDC Diabetes Health Indicators : sa cible regroupe le prediabete et le diabete declares. Le score obtenu ne constitue pas un diagnostic medical ni une estimation validee du risque futur.

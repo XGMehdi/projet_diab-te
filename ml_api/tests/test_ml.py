@@ -45,7 +45,7 @@ class MLTests(unittest.TestCase):
         nbformat.validate(nbformat.read(ROOT / 'training.ipynb', as_version=4))
 
     def test_synthetic_workflow_only(self):
-        # Artificial data checks software, never used as PFE performance evidence.
+        # Artificial data checks software, never used as PFA 2026 performance evidence.
         rng = np.random.default_rng(12)
         n = 160
         frame = pd.DataFrame(rng.integers(0,2,(n,len(CSV_FEATURES))), columns=CSV_FEATURES)

@@ -1,0 +1,12 @@
+GET /api/predictions
+
+Résultat attendu:
+
+[
+  {
+    "id": 1,
+    "riskScore": 0.73,
+    "riskLevel": "HIGH",
+    "createdAt": "2026-05-09T23:10:00"
+  }
+]

@@ -1,0 +1,13 @@
+﻿node_modules/
+dist/
+target/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.log
+.env
+.env.*
+!.env.example
+
+application-local.properties

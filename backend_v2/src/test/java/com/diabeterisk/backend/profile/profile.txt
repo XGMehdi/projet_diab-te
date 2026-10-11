@@ -1,0 +1,32 @@
+1. UPDATE PROFILE
+PUT
+PUT /api/profile/update
+Headers
+Authorization: Bearer TOKEN
+Content-Type: application/json
+Body
+{
+  "nom": "Elkasraoui",
+  "prenom": "Soufiane",
+  "dateNaissance": "2004-06-15"
+}
+Réponse
+{
+  "id": 1,
+  "nom": "Elkasraoui",
+  "prenom": "Soufiane",
+  "email": "soufiane@gmail.com",
+  "dateNaissance": "2004-06-15"
+}
+
+
+2. CHANGE PASSWORD
+PUT
+PUT /api/profile/change-password
+Body
+{
+  "currentPassword": "old123",
+  "newPassword": "new456"
+}
+Résultat
+200 OK

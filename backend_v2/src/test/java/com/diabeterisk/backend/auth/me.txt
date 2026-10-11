@@ -1,0 +1,11 @@
+GET /api/auth/me
+Authorization: Bearer JWT_TOKEN
+
+Résultat attendu:
+
+{
+  "id": 1,
+  "nom": "Soufiane",
+  "prenom": "Elkasraoui",
+  "email": "soufiane@gmail.com"
+}

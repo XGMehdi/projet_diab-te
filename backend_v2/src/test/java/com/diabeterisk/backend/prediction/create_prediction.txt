@@ -1,0 +1,38 @@
+POST /api/predictions
+
+Headers:
+
+Authorization: Bearer YOUR_TOKEN
+Content-Type: application/json
+
+Body:
+
+{
+  "highBp": true,
+  "highChol": true,
+  "cholCheck": true,
+  "bmi": 31.2,
+  "smoker": false,
+  "stroke": false,
+  "heartDiseaseOrAttack": false,
+  "physActivity": true,
+  "fruits": true,
+  "veggies": true,
+  "hvyAlcoholConsump": false,
+  "genHlth": 3,
+  "mentHlth": 4,
+  "physHlth": 7,
+  "diffWalk": false,
+  "sex": "MALE",
+  "age": 8
+}
+
+Résultat attendu:
+
+{
+  "predictionId": 1,
+  "riskScore": 0.73,
+  "riskLevel": "HIGH",
+  "shapValues": "{...}",
+  "createdAt": "2026-05-09T23:10:00"
+}

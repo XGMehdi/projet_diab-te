@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>DiabeteRisk - Analyse Intelligente du Risque de Diabète</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Google Fonts: Manrope -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --bs-primary: #0057cd;
+            --bs-primary-rgb: 0, 87, 205;
+            --surface: #f8f9fa;
+            --surface-container-low: #f3f4f5;
+            --on-surface: #191c1d;
+            --secondary: #575f67;
+            --border-radius-custom: 1rem;
+            --border-radius-lg: 1.5rem;
+            --border-radius-xl: 2rem;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            color: var(--on-surface);
+            background-color: var(--surface);
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            color: var(--bs-primary) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--secondary);
+            margin: 0 10px;
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #00419e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 87, 205, 0.2);
+        }
+
+        .btn-outline-secondary {
+            color: var(--secondary);
+            border-color: #dee2e6;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--surface-container-low);
+            color: var(--on-surface);
+            border-color: #ced4da;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 6rem 0;
+        }
+
+        .badge-promo {
+            background-color: rgba(0, 87, 205, 0.1);
+            color: var(--bs-primary);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.125rem;
+            color: var(--secondary);
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .floating-card {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* How it works */
+        .how-it-works {
+            background-color: var(--surface-container-low);
+            padding: 6rem 0;
+        }
+
+        .step-card {
+            background: white;
+            border: none;
+            border-radius: var(--border-radius-custom);
+            padding: 2.5rem;
+            height: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            background-color: #f0f7ff;
+            color: var(--bs-primary);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Benefits */
+        .benefits-section {
+            padding: 6rem 0;
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .benefit-icon {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(0, 87, 205, 0.1);
+            color: var(--bs-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .benefit-img-grid .img-fluid {
+            border-radius: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card {
+            background-color: var(--bs-primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 4rem 0 6rem;
+        }
+
+        .cta-container {
+            background-color: var(--bs-primary);
+            color: white;
+            border-radius: var(--border-radius-xl);
+            padding: 5rem 3rem;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .cta-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+            filter: blur(60px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f1f3f5;
+            border-top: 1px solid #dee2e6;
+            padding: 4rem 0 2rem;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+
+        @media (max-width: 991.98px) {
+            .hero-title {
+                font-size: 2.25rem;
+            }
+
+            .hero-section {
+                text-align: center;
+            }
+
+            .hero-subtitle {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .cta-container {
+                padding: 3rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top py-3">
+        <div class="container max-w-7xl">
+            <a class="navbar-brand fs-3" href="#">DiabeteRisk</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Fonctionnement</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Avantages</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <a class="nav-link text-decoration-none p-0 me-3" href="#">Connexion</a>
+                    <a class="btn btn-primary px-4" href="#">Inscription</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="row align-items-center gy-5">
+                    <div class="col-lg-6">
+                        <span class="badge-promo">Santé Intelligente &amp; Prévention</span>
+                        <h1 class="hero-title">Détectez votre risque de diabète en quelques secondes</h1>
+                        <p class="hero-subtitle">Une application intelligente qui analyse vos données de santé pour vous
+                            fournir une estimation rapide, fiable et personnalisée de votre profil glycémique.</p>
+                        <div class="d-flex flex-column flex-sm-row gap-3">
+                            <button class="btn btn-primary btn-lg px-4 py-3">Commencer maintenant</button>
+                            <button class="btn btn-outline-secondary btn-lg px-4 py-3">Créer un compte</button>
+                        </div>
+                        <div class="mt-5 d-flex align-items-center gap-3">
+                            <div class="d-flex -space-x-2">
+                                <span class="badge rounded-circle bg-light text-primary border p-2"
+                                    style="font-size: 10px;">+10k</span>
+                            </div>
+                            <small class="text-secondary">Déjà plus de 10 000 analyses effectuées ce mois-ci.</small>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="hero-image-wrapper">
+                            <img alt="Analyse de santé IA" class="img-fluid"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhrbb5wEIECY4Jlnr4MGDEBxQeuQAExH2376xkyOnbcJgMbkRhe16vBtZsFe72Z-NZdDNPJLZwWaSycoUM5tUdrZdp98_2Cy7r0ZizQ_gvNdAXAm5u4O5ZXWI2B_l2jFFuPULetN4QS3T8g5lqk1c98HZNce2f4EnDdMJ1MALE9F1tXNB11AgAVOPERo8lorg1KIegPWXiqO4vr0OJMAUC0-1n6Cp83uqQnbczqvxmX8V7vXD_Ga5fPMu68eGH2AlBTUnopq0ApPo" />
+                            <div class="floating-card">
+                                <div class="bg-primary text-white rounded-circle p-2 d-flex align-items-center">
+                                    <span class="material-symbols-outlined">analytics</span>
+                                </div>
+                                <div>
+                                    <div class="fw-bold small text-uppercase text-muted" style="letter-spacing: 1px;">
+                                        Précision IA</div>
+                                    <div class="fw-bold">Résultats en temps réel</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- "Comment ça marche" Section -->
+        <section class="how-it-works">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold h1 mb-3">Comment ça marche</h2>
+                    <p class="text-secondary mx-auto" style="max-width: 600px;">Trois étapes simples pour obtenir une
+                        vision claire de votre santé métabolique sans examens complexes.</p>
+                </div>
+                <div class="row g-4 text-center">
+                    <div class="col-md-4">
+                        <div class="step-card">
+                            <div class="icon-box">
+                                <span class="material-symbols-outlined fs-2">edit_note</span>
+                            </div>
+                            <h3 class="h5 fw-bold mb-3">Saisissez vos données</h3>
+                            <p class="text-secondary small mb-0">Remplissez un court questionnaire sur vos habitudes de
+                                vie, votre hérédité et vos mesures de base.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="step-card">
+                            <div class="icon-box">
+                                <span class="material-symbols-outlined fs-2">psychology</span>
+                            </div>
+                            <h3 class="h5 fw-bold mb-3">Analyse intelligente</h3>
+                            <p class="text-secondary small mb-0">Notre algorithme entraîné sur des milliers de cas
+                                cliniques traite vos informations instantanément.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="step-card">
+                            <div class="icon-box">
+                                <span class="material-symbols-outlined fs-2">verified</span>
+                            </div>
+                            <h3 class="h5 fw-bold mb-3">Obtenez vos résultats</h3>
+                            <p class="text-secondary small mb-0">Recevez un score de risque détaillé et des
+                                recommandations personnalisées pour agir dès maintenant.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- "Pourquoi utiliser notre application ?" Section -->
+        <section class="benefits-section">
+            <div class="container">
+                <div class="row align-items-center gy-5">
+                    <div class="col-lg-6 order-2 order-lg-1">
+                        <div class="row g-3 benefit-img-grid">
+                            <div class="col-6">
+                                <img alt="Smart Health tracking" class="img-fluid mb-3"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ8cgobFwY6yUYu2HCIhdRjR2azeBZH0hgSN6pD_J2bKXtC2_mf48FObiOwyqgWZ4XTs8qfcDO71Ictue5RxoVB2XH_RIOeCQ5D2MOO7OTAlxX1rXtEMKX1ff12Q7S8JDqYX8SWeiqsrmeCbJRbLeRHC85LUZTdYTKrs1apizP-PDOo6u2cbKxtxhvnqmdcI9LFUPJUL0UIKXTLqVDeNpXIciFHsC6ilHlhIqh1GQoPnlCLjFMmsYxN7HNjRhrGZV_ZeXesBOU4LE" />
+                                <div class="stat-card">
+                                    <h3 class="fw-extrabold mb-1">98%</h3>
+                                    <p class="small mb-0 opacity-75">Taux de satisfaction utilisateur</p>
+                                </div>
+                            </div>
+                            <div class="col-6 mt-4">
+                                <div class="bg-white p-4 rounded-4 shadow-sm border mb-3 text-center">
+                                    <span class="material-symbols-outlined text-primary fs-3 mb-2">security</span>
+                                    <div class="fw-bold small">Données Sécurisées</div>
+                                </div>
+                                <img alt="Medical context" class="img-fluid"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq-wCmOCQn41kCn0mVCN-lT6BqS35L7UilBM_rJucbA8EelE8LK-65ZiXro_fSHVgjSG4N-juEYllW0mmfm6v1P_Q2d5biC6N1vT3fAMh8Oj4FZHsFHt_Bg6b_2ZIsBZVz19NGw8u5P1Iu8i6TEUHIT6tTQK4QPxknphXy0uuw2i98CZhvt_nc7nxxHMx3eo4s42v-oJU36m9m3aqAgyOuw7UEEwffwXCBss3KfDhFJ0gfI_IcnmSLmLD6wqFkDH3CRbWaoMr4xts" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 ps-lg-5 order-1 order-lg-2">
+                        <h2 class="fw-bold h1 mb-5">Pourquoi utiliser notre application ?</h2>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <span class="material-symbols-outlined">bolt</span>
+                            </div>
+                            <div>
+                                <h4 class="h5 fw-bold mb-1">Rapide et simple</h4>
+                                <p class="text-secondary small">Moins de 2 minutes suffisent pour réaliser une analyse
+                                    complète de votre profil de risque.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <span class="material-symbols-outlined">clinical_notes</span>
+                            </div>
+                            <div>
+                                <h4 class="h5 fw-bold mb-1">Basé sur des données médicales</h4>
+                                <p class="text-secondary small">Nos modèles s'appuient sur des études cliniques validées
+                                    pour garantir la pertinence des résultats.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </div>
+                            <div>
+                                <h4 class="h5 fw-bold mb-1">Résultats clairs</h4>
+                                <p class="text-secondary small">Pas de jargon médical complexe. Nous vous donnons des
+                                    indicateurs compréhensibles immédiatement.</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <span class="material-symbols-outlined">groups</span>
+                            </div>
+                            <div>
+                                <h4 class="h5 fw-bold mb-1">Accessible à tous</h4>
+                                <p class="text-secondary small">Une interface pensée pour être utilisée par tous, quel
+                                    que soit votre niveau technique.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-container">
+                    <h2 class="display-5 fw-bold mb-3">Prenez votre santé en main dès aujourd’hui</h2>
+                    <p class="lead opacity-90 mb-5 mx-auto" style="max-width: 700px;">Rejoignez des milliers
+                        d'utilisateurs qui ont déjà fait le premier pas vers une prévention active et sereine.</p>
+                    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                        <button class="btn btn-light btn-lg px-5 py-3 fw-bold text-primary">Créer un compte</button>
+                        <button class="btn btn-outline-light btn-lg px-5 py-3 fw-bold">Se connecter</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row gy-4 align-items-center">
+                <div class="col-md-6">
+                    <div class="h4 fw-bold mb-2">DiabeteRisk</div>
+                    <p class="text-secondary small mb-0">Application académique — Projet de fin d'année.<br />Analyse
+                        intelligente pour la santé.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-flex flex-wrap gap-4 justify-content-md-end">
+                        <a class="text-secondary text-decoration-none small hover-primary" href="#">À propos</a>
+                        <a class="text-secondary text-decoration-none small hover-primary" href="#">Confidentialité</a>
+                        <a class="text-secondary text-decoration-none small hover-primary" href="#">Conditions</a>
+                        <a class="text-secondary text-decoration-none small hover-primary" href="#">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 opacity-10" />
+            <div class="text-center text-md-start small text-secondary">
+                DiabeteRisk - Projet Académique © 2024. Analyse intelligente pour la santé.
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

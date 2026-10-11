@@ -1,0 +1,18 @@
+Latest Risk
+GET /api/dashboard/latest-risk
+
+Total Predictions
+GET /api/dashboard/total-predictions
+
+Average Risk
+GET /api/dashboard/average-risk
+
+Risk Chart
+GET /api/dashboard/risk-chart
+
+
+IMPORTANT
+
+Toutes les APIs nécessitent :
+
+Authorization: Bearer TOKEN

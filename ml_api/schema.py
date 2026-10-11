@@ -1,0 +1,2 @@
+﻿FEATURES = ['highBp', 'highChol', 'cholCheck', 'bmi', 'smoker', 'stroke', 'heartDiseaseOrAttack', 'physActivity', 'fruits', 'veggies', 'hvyAlcoholConsump', 'genHlth', 'mentHlth', 'physHlth', 'diffWalk', 'sex', 'age']
+CSV_FEATURES = ['HighBP', 'HighChol', 'CholCheck', 'BMI', 'Smoker', 'Stroke', 'HeartDiseaseorAttack', 'PhysActivity', 'Fruits', 'Veggies', 'HvyAlcoholConsump', 'GenHlth', 'MentHlth', 'PhysHlth', 'DiffWalk', 'Sex', 'Age']

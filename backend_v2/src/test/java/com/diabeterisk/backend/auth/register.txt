@@ -1,0 +1,10 @@
+POST /api/auth/register
+
+body:
+{
+  "nom": "Soufiane",
+  "prenom": "Elkasraoui",
+  "email": "soufiane@gmail.com",
+  "password": "password123",
+  "dateNaissance": "2004-08-15"
+}

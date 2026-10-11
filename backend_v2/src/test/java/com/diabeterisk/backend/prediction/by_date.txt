@@ -1,0 +1,3 @@
+GET /api/predictions/by-date?date=2026-05-10
+
+Authorization: Bearer TOKEN

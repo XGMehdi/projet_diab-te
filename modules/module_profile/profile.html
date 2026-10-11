@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Mon Profil - DiabeteRisk</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            /* Theme Colors from DOCUMENT_8 */
+            --bs-primary: #0057cd;
+            --bs-secondary: #575f67;
+            --bs-background: #f8f9fa;
+            --bs-surface: #ffffff;
+            --bs-on-surface: #191c1d;
+            --bs-on-surface-variant: #424655;
+            --bs-error: #ba1a1a;
+            --bs-error-container: #ffdad6;
+            --bs-on-error-container: #93000a;
+            --bs-primary-container: #0d6efd;
+            --bs-on-primary-container: #ffffff;
+            --bs-tertiary: #00677c;
+            --bs-tertiary-container: #00829b;
+            --bs-secondary-container: #d8e1ea;
+            --bs-on-secondary-container: #5b646b;
+            --bs-surface-container-low: #f3f4f5;
+            --bs-outline-variant: #c2c6d8;
+            --bs-primary-rgb: 0, 87, 205;
+            --surface: #f8f9fa;
+            --surface-container-low: #f3f4f5;
+            --on-surface: #191c1d;
+            --secondary: #575f67;
+            --border-radius-custom: 1rem;
+            --border-radius-lg: 1.5rem;
+            --border-radius-xl: 2rem;
+            --tertiary: #b90063;
+            --secondary-container: #e1e2ec;
+            --on-secondary-container: #191c1d;
+            --surface-bright: #fdfbff;
+            --surface-container-lowest: #ffffff;
+            --on-surface-variant: #44474e;
+
+            --bs-body-font-family: 'Manrope', sans-serif;
+            --bs-body-bg: var(--surface);
+            --bs-body-color: var(--on-surface);
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: var(--bs-background);
+            color: var(--bs-on-surface);
+        }
+
+        /* Typography Customization */
+        h1,
+        .h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+
+        h2,
+        .h2 {
+            font-weight: 600;
+            font-size: 2rem;
+            line-height: 1.3;
+        }
+
+        h3,
+        .h3 {
+            font-weight: 600;
+            font-size: 1.75rem;
+            line-height: 1.3;
+        }
+
+        .text-label-sm {
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        /* Custom Colors & Utilities */
+        .text-primary-custom {
+            color: var(--bs-primary);
+        }
+
+        .text-secondary-custom {
+            color: var(--bs-secondary);
+        }
+
+        .bg-surface {
+            background-color: var(--bs-surface);
+        }
+
+        .bg-surface-low {
+            background-color: var(--bs-surface-container-low);
+        }
+
+        .shadow-sm-custom {
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .shadow-md-custom {
+            box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-primary-custom {
+            background-color: var(--bs-primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--bs-primary-container);
+            color: white;
+        }
+
+        .btn-custom-outline {
+            border: 1px solid var(--bs-outline-variant);
+            color: var(--bs-on-surface-variant);
+            background: transparent;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-custom-outline:hover {
+            background-color: var(--bs-surface-container-low);
+            color: var(--bs-on-surface);
+        }
+
+        /* Navbar Customization from DOCUMENT_8 */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            color: var(--bs-primary) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link-custom {
+            color: #575f67;
+            font-weight: 500;
+        }
+
+        .nav-link-custom:hover {
+            color: #0057cd;
+        }
+
+        .nav-link-active {
+            color: #0057cd;
+            font-weight: 600;
+            border-bottom: 2px solid #0057cd;
+            padding-bottom: 0.25rem;
+        }
+
+        /* Profile Specific Styles aligned with DOCUMENT_8 */
+        .profile-card {
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: var(--border-radius-custom);
+            padding: 2rem;
+            height: 100%;
+        }
+
+        .profile-avatar-container {
+            width: 120px;
+            height: 120px;
+            background-color: var(--bs-surface-container-low);
+            margin: 0 auto 1.5rem auto;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid var(--bs-surface);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .profile-avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .info-icon {
+            font-size: 20px;
+            color: var(--bs-primary);
+        }
+
+        /* Form Customization */
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--bs-on-surface-variant);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border-color: var(--bs-outline-variant);
+            padding: 0.875rem 1rem;
+            border-radius: 0.5rem;
+            background-color: var(--surface-bright);
+            color: var(--on-surface);
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(0, 87, 205, 0.15);
+            border-color: var(--bs-primary);
+            background-color: var(--bs-surface);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar from DOCUMENT_8 -->
+    <nav class="navbar navbar-expand-lg sticky-top py-3">
+        <div class="container max-w-7xl">
+            <a class="navbar-brand fs-3" href="#">DiabeteRisk</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="d-none d-md-flex align-items-center gap-4 mx-auto">
+                    <!-- Dashboard -->
+                    <a class="text-decoration-none nav-link-custom"
+                        href="../module_dashboard/dashboard.html">Dashboard</a>
+
+                    <!-- Prédiction -->
+                    <a class="text-decoration-none nav-link-custom"
+                        href="../module_prediction/new_prediction.html">Prédiction</a>
+
+                    <!-- Historique -->
+                    <a class="text-decoration-none nav-link-custom"
+                        href="../module_historique/historique.html">Historique</a>
+
+                    <!-- Profil -->
+                    <a class="text-decoration-none nav-link-active" href="../module_profile/profile.html">Profil</a>
+                </div>
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-link text-decoration-none text-secondary d-flex align-items-center p-0">
+                        <span class="material-symbols-outlined me-1">logout</span>
+                        <span class="d-none d-sm-inline">Déconnexion</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Main Content -->
+    <main class="container py-5">
+        <!-- Header -->
+        <div class="mb-5">
+            <h1 class="h1 mb-2">Mon profil</h1>
+            <p class="fs-5 text-secondary-custom mb-0">Consultez et modifiez vos informations personnelles.</p>
+        </div>
+        <div class="row g-4">
+            <!-- Profile Summary Card -->
+            <div class="col-lg-4">
+                <div class="profile-card shadow-sm-custom text-center">
+                    <div class="profile-avatar-container">
+                        <img alt="Ahmed Benali"
+                            src="https://static.vecteezy.com/system/resources/previews/048/668/547/non_2x/blue-user-icon-profile-and-account-vector.jpg" />
+                    </div>
+                    <h2 class="h2 mb-3">Ahmed Benali</h2>
+                    <div class="info-row">
+                        <span class="material-symbols-outlined info-icon">mail</span>
+                        <span>ahmed@email.com</span>
+                    </div>
+                    <hr class="w-100 my-4 text-muted opacity-25" />
+                    <div class="info-row">
+                        <span class="material-symbols-outlined info-icon">cake</span>
+                        <span>Né le 15/08/1995</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Edit Form Card -->
+            <div class="col-lg-8">
+                <div class="profile-card shadow-sm-custom">
+                    <h3 class="h3 mb-4 pb-3 border-bottom opacity-75">Informations personnelles</h3>
+                    <form>
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label class="form-label" for="nom">Nom</label>
+                                <input class="form-control" id="nom" type="text" value="Ahmed" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="prenom">Prénom</label>
+                                <input class="form-control" id="prenom" type="text" value="Benali" />
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label" for="email">Email</label>
+                            <input class="form-control" id="email" type="email" value="ahmed@email.com" />
+                        </div>
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label class="form-label" for="password">Mot de passe</label>
+                                <input class="form-control" id="password" type="password"
+                                    placeholder="Nouveau mot de passe" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="confirmPassword">Confirmer le mot de passe</label>
+                                <input class="form-control" id="confirmPassword" type="password"
+                                    placeholder="Confirmer le mot de passe" />
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="form-label" for="dob">Date de naissance</label>
+                            <input class="form-control" id="dob" type="date" value="1995-08-15" />
+                        </div>
+                        <div class="d-flex gap-3 flex-column flex-sm-row">
+                            <button class="btn btn-primary-custom" type="button">Enregistrer les modifications</button>
+                            <button class="btn btn-custom-outline" type="button">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

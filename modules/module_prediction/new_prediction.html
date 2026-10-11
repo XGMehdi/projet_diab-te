@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nouvelle prédiction - DiabeteRisk</title>
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --bs-primary: #0057cd;
+            --bs-primary-rgb: 0, 87, 205;
+            --surface: #f8f9fa;
+            --surface-container-low: #f3f4f5;
+            --on-surface: #191c1d;
+            --secondary: #575f67;
+            --border-radius-custom: 1rem;
+            --border-radius-lg: 1.5rem;
+            --border-radius-xl: 2rem;
+            --tertiary: #b90063;
+            --secondary-container: #e1e2ec;
+            --on-secondary-container: #191c1d;
+            --surface-bright: #fdfbff;
+            --surface-container-lowest: #ffffff;
+            --on-surface-variant: #44474e;
+
+            --bs-body-font-family: 'Manrope', sans-serif;
+            --bs-body-bg: var(--surface);
+            --bs-body-color: var(--on-surface);
+        }
+
+        body {
+            font-family: var(--bs-body-font-family);
+            background-color: var(--bs-body-bg);
+            color: var(--bs-body-color);
+        }
+
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            color: var(--bs-primary) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link-custom {
+            color: #575f67;
+            font-weight: 500;
+        }
+
+        .nav-link-custom:hover {
+            color: #0057cd;
+        }
+
+        .custom-card {
+            background-color: #ffffff;
+            border: none;
+            border-radius: var(--border-radius-custom);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .custom-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .card-header-icon {
+            color: var(--bs-primary);
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+            vertical-align: middle;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 1.25rem;
+            margin-bottom: 0;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--on-surface);
+        }
+
+        .form-control, .form-select {
+            border-color: #dee2e6;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+        }
+
+        /* Modal Customization */
+        .modal-content {
+            border-radius: var(--border-radius-xl);
+            border: none;
+            box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
+            background-color: var(--surface-container-lowest);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            color: var(--on-surface);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .score-container {
+            background-color: var(--surface);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-circle {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-circle svg {
+            width: 120px;
+            height: 120px;
+            transform: rotate(-90deg);
+        }
+
+        .progress-circle .value {
+            position: absolute;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--on-surface);
+        }
+
+        .badge-risk {
+            background-color: #fff3cd;
+            color: #856404;
+            font-weight: 700;
+            padding: 0.5rem 1.25rem;
+            border-radius: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .risk-text {
+            color: var(--secondary);
+            text-align: center;
+            max-width: 450px;
+            margin-bottom: 0;
+        }
+
+        .detail-card {
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: var(--border-radius-custom);
+            padding: 1.25rem;
+            height: 100%;
+        }
+
+        .detail-card-title {
+            font-weight: 700;
+            color: var(--on-surface);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.25rem;
+        }
+
+        .factor-row {
+            margin-bottom: 1rem;
+        }
+
+        .factor-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .factor-value {
+            font-weight: 700;
+            color: var(--tertiary);
+        }
+
+        .progress-custom {
+            height: 6px;
+            background-color: var(--surface-container-low);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-custom-bar {
+            height: 100%;
+            background-color: var(--tertiary);
+        }
+
+        .summary-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn-custom-outline {
+            border: 1px solid var(--bs-primary);
+            color: var(--bs-primary);
+            background: transparent;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-custom-secondary {
+            background-color: #e2e3e5;
+            color: #383d41;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-custom-primary {
+            background-color: var(--bs-primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-custom-text {
+            background: none;
+            border: none;
+            color: var(--secondary);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-link-active {
+            color: #0057cd;
+            font-weight: 600;
+            border-bottom: 2px solid #0057cd;
+            padding-bottom: 0.25rem;
+        }
+
+        /* Form Switch Customization */
+        .form-check-input:checked {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+        .form-switch .form-check-input {
+            width: 3rem;
+            height: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg sticky-top py-3">
+<div class="container max-w-7xl">
+<a class="navbar-brand fs-3" href="#">DiabeteRisk</a>
+<div class="collapse navbar-collapse" id="navbarNav">
+<div class="d-none d-md-flex align-items-center gap-4 mx-auto">
+<!-- Dashboard -->
+<a class="text-decoration-none nav-link-custom" href="../module_dashboard/dashboard.html">Dashboard</a>
+<!-- Prédiction -->
+<a class="text-decoration-none nav-link-active" href="../module_prediction/new_prediction.html">Prédiction</a>
+<!-- Historique -->
+<a class="text-decoration-none nav-link-custom" href="../module_historique/historique.html">Historique</a>
+<!-- Profil -->
+<a class="text-decoration-none nav-link-custom" href="../module_profile/profile.html">Profil</a>
+</div>
+<div class="d-flex align-items-center">
+<button class="btn btn-link text-decoration-none text-secondary d-flex align-items-center p-0">
+<span class="material-symbols-outlined me-1">logout</span>
+<span class="d-none d-sm-inline">Déconnexion</span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<main class="container py-5">
+<div class="row justify-content-center">
+<div class="col-lg-11 col-xl-10">
+<div class="page-header text-center mb-5">
+<h1 class="page-title h2">Nouvelle prédiction</h1>
+<p class="page-subtitle">Saisissez vos données de santé pour évaluer votre risque de diabète selon le protocole BRFSS 2015</p>
+</div>
+<form>
+<!-- Card 1: Informations personnelles -->
+<div class="card custom-card">
+<div class="card-body p-4">
+<div class="d-flex align-items-center mb-4">
+<span class="material-symbols-outlined card-header-icon" style="font-variation-settings: 'FILL' 1;">person</span>
+<h2 class="card-title">Informations personnelles</h2>
+</div>
+<div class="row g-4">
+<div class="col-md-6">
+<label class="form-label" for="age">Tranche d'âge</label>
+<select class="form-select" id="age" required="">
+<option disabled="" selected="" value="">Sélectionnez votre âge</option>
+<option value="1">18 - 24 ans</option>
+<option value="2">25 - 29 ans</option>
+<option value="3">30 - 34 ans</option>
+<option value="4">35 - 39 ans</option>
+<option value="5">40 - 44 ans</option>
+<option value="6">45 - 49 ans</option>
+<option value="7">50 - 54 ans</option>
+<option value="8">55 - 59 ans</option>
+<option value="9">60 - 64 ans</option>
+<option value="10">65 - 69 ans</option>
+<option value="11">70 - 74 ans</option>
+<option value="12">75 - 79 ans</option>
+<option value="13">80 ans ou plus</option>
+</select>
+</div>
+<div class="col-md-6">
+<label class="form-label d-block mb-3">Sexe</label>
+<div class="d-flex gap-4">
+<div class="form-check">
+<input class="form-check-input" id="sex_male" name="sex" required="" type="radio" value="1"/>
+<label class="form-check-label" for="sex_male">Homme</label>
+</div>
+<div class="form-check">
+<input class="form-check-input" id="sex_female" name="sex" type="radio" value="0"/>
+<label class="form-check-label" for="sex_female">Femme</label>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Santé physique -->
+<div class="card custom-card">
+<div class="card-body p-4">
+<div class="d-flex align-items-center mb-4">
+<span class="material-symbols-outlined card-header-icon" style="font-variation-settings: 'FILL' 1;">monitor_heart</span>
+<h2 class="card-title">Santé physique</h2>
+</div>
+<div class="row g-4">
+<div class="col-md-12">
+<label class="form-label" for="bmi">IMC (Indice de Masse Corporelle)</label>
+<input class="form-control" id="bmi" placeholder="Ex: 24.5" required="" step="0.1" type="number"/>
+</div>
+<div class="col-md-6">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3">
+<label class="form-check-label fw-medium" for="highbp">Hypertension artérielle</label>
+<input class="form-check-input" id="highbp" type="checkbox"/>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3">
+<label class="form-check-label fw-medium" for="highchol">Cholestérol élevé</label>
+<input class="form-check-input" id="highchol" type="checkbox"/>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3">
+<label class="form-check-label fw-medium" for="heartdisease">Maladie cardiaque / Infarctus</label>
+<input class="form-check-input" id="heartdisease" type="checkbox"/>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3">
+<label class="form-check-label fw-medium" for="stroke">Antécédent d'AVC</label>
+<input class="form-check-input" id="stroke" type="checkbox"/>
+</div>
+</div>
+<div class="col-md-12">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3">
+<label class="form-check-label fw-medium" for="diffwalk">Difficultés à marcher ou monter des escaliers</label>
+<input class="form-check-input" id="diffwalk" type="checkbox"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: Mode de vie -->
+<div class="card custom-card">
+<div class="card-body p-4">
+<div class="d-flex align-items-center mb-4">
+<span class="material-symbols-outlined card-header-icon" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+<h2 class="card-title">Mode de vie</h2>
+</div>
+<div class="row g-3">
+<div class="col-md-6">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3">
+<label class="form-check-label fw-medium" for="physactivity">Activité physique (30 derniers jours)</label>
+<input class="form-check-input" id="physactivity" type="checkbox"/>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3">
+<label class="form-check-label fw-medium" for="smoker">Fumeur (au moins 100 cigarettes à vie)</label>
+<input class="form-check-input" id="smoker" type="checkbox"/>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3">
+<label class="form-check-label fw-medium" for="fruits">Consommation de fruits quotidienne</label>
+<input class="form-check-input" id="fruits" type="checkbox"/>
+</div>
+</div>
+<div class="col-md-6">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3">
+<label class="form-check-label fw-medium" for="veggies">Consommation de légumes quotidienne</label>
+<input class="form-check-input" id="veggies" type="checkbox"/>
+</div>
+</div>
+<div class="col-12">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3">
+<label class="form-check-label fw-medium" for="hvyalcohol">Consommation excessive d'alcool</label>
+<input class="form-check-input" id="hvyalcohol" type="checkbox"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4: Santé générale -->
+<div class="card custom-card">
+<div class="card-body p-4">
+<div class="d-flex align-items-center mb-4">
+<span class="material-symbols-outlined card-header-icon" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+<h2 class="card-title">Santé générale</h2>
+</div>
+<div class="row g-4">
+<div class="col-md-6">
+<label class="form-label" for="genhlth">Perception de votre santé</label>
+<select class="form-select" id="genhlth" required="">
+<option disabled="" selected="" value="">Comment évaluez-vous votre santé ?</option>
+<option value="1">Excellent</option>
+<option value="2">Très bon</option>
+<option value="3">Bon</option>
+<option value="4">Moyen</option>
+<option value="5">Mauvais</option>
+</select>
+</div>
+<div class="col-md-6">
+<div class="form-check form-switch d-flex justify-content-between align-items-center border rounded p-3 mt-md-4">
+<label class="form-check-label fw-medium" for="cholcheck">Contrôle du cholestérol (5 ans)</label>
+<input class="form-check-input" id="cholcheck" type="checkbox"/>
+</div>
+</div>
+<div class="col-md-6">
+<label class="form-label" for="menthlth">Santé mentale (jours)</label>
+<input class="form-control" id="menthlth" max="30" min="0" placeholder="0-30" required="" type="number"/>
+<div class="form-text">Nombre de jours de mauvaise santé mentale le mois dernier</div>
+</div>
+<div class="col-md-6">
+<label class="form-label" for="physhlth">Santé physique (jours)</label>
+<input class="form-control" id="physhlth" max="30" min="0" placeholder="0-30" required="" type="number"/>
+<div class="form-text">Nombre de jours de maladie ou blessure physique le mois dernier</div>
+</div>
+</div>
+</div>
+</div>
+<div class="text-center mt-5 mb-5">
+<button class="btn btn-primary btn-lg" data-bs-target="#resultModal" data-bs-toggle="modal" type="submit">
+                            Calculer le risque
+                        </button>
+</div>
+</form>
+</div>
+</div>
+</main>
+<!-- Bootstrap Modal -->
+<div aria-hidden="true" aria-labelledby="resultModalLabel" class="modal fade" id="resultModal" tabindex="-1">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title" id="resultModalLabel">
+<span class="material-symbols-outlined text-primary">monitoring</span>
+                        Résultat de votre analyse
+                    </h5>
+<button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<div class="score-container">
+<div class="progress-circle">
+<svg viewbox="0 0 36 36">
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e9ecef" stroke-width="3"></path>
+<path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--tertiary)" stroke-dasharray="65, 100" stroke-width="3">
+</path>
+</svg>
+<span class="value">65%</span>
+</div>
+<span class="badge-risk">
+<span class="material-symbols-outlined" style="font-size: 1.25rem;">warning</span>
+                            Risque moyen
+                        </span>
+<p class="risk-text">
+                            Votre risque est modéré. Une attention particulière à votre alimentation et à votre activité
+                            physique est recommandée.
+                        </p>
+</div>
+<div class="row g-4">
+<div class="col-md-6">
+<div class="detail-card">
+<div class="detail-card-title">Facteurs d'influence principaux</div>
+<div class="factor-row">
+<div class="factor-header">
+<span>BMI élevé</span>
+<span class="factor-value">+32%</span>
+</div>
+<div class="progress-custom">
+<div class="progress-custom-bar" style="width: 32%;"></div>
+</div>
+</div>
+<div class="factor-row">
+<div class="factor-header">
+<span>Mauvaise santé générale</span>
+<span class="factor-value">+21%</span>
+</div>
+<div class="progress-custom">
+<div class="progress-custom-bar" style="width: 21%;"></div>
+</div>
+</div>
+<div class="factor-row">
+<div class="factor-header">
+<span>Faible activité physique</span>
+<span class="factor-value">+15%</span>
+</div>
+<div class="progress-custom">
+<div class="progress-custom-bar" style="width: 15%;"></div>
+</div>
+</div>
+<div class="factor-row">
+<div class="factor-header">
+<span>Âge avancé</span>
+<span class="factor-value">+12%</span>
+</div>
+<div class="progress-custom">
+<div class="progress-custom-bar" style="width: 12%;"></div>
+</div>
+</div>
+<div class="factor-row">
+<div class="factor-header">
+<span>Hypertension</span>
+<span class="factor-value">+10%</span>
+</div>
+<div class="progress-custom">
+<div class="progress-custom-bar" style="width: 10%;"></div>
+</div>
+</div>
+<div class="factor-row">
+<div class="factor-header">
+<span>Cholestérol élevé</span>
+<span class="factor-value">+8%</span>
+</div>
+<div class="progress-custom">
+<div class="progress-custom-bar" style="width: 8%;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="detail-card">
+<div class="detail-card-title">Résumé des données</div>
+<ul class="summary-list">
+<li class="summary-item">
+<span class="text-secondary">Age</span>
+<span class="fw-bold text-dark">45-49 ans</span>
+</li>
+<li class="summary-item">
+<span class="text-secondary">Sexe</span>
+<span class="fw-bold text-dark">Homme</span>
+</li>
+<li class="summary-item">
+<span class="text-secondary">BMI</span>
+<span class="fw-bold text-dark">28.5</span>
+</li>
+<li class="summary-item">
+<span class="text-secondary">Activité physique</span>
+<span class="fw-bold text-dark">Oui</span>
+</li>
+<li class="summary-item">
+<span class="text-secondary">Hypertension</span>
+<span class="fw-bold text-dark">Oui</span>
+</li>
+<li class="summary-item">
+<span class="text-secondary">Santé générale</span>
+<span class="fw-bold text-dark">Bonne</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="modal-footer justify-content-between">
+<button class="btn-custom-text" data-bs-dismiss="modal" type="button">Fermer</button>
+<div class="d-flex gap-2 flex-wrap">
+<button class="btn-custom-outline" type="button">
+<span class="material-symbols-outlined">history</span>
+                            Voir l'historique
+                        </button>
+<button class="btn-custom-primary" type="button">
+<span class="material-symbols-outlined">save</span>
+                            Enregistrer
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body></html>

@@ -1,0 +1,21 @@
+POST /api/auth/login
+
+body:
+
+{
+  "email": "soufiane@gmail.com",
+  "password": "password123"
+}
+
+Résultat attendu:
+
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9....",
+  "user": {
+    "id": 1,
+    "nom": "Soufiane",
+    "prenom": "Elkasraoui",
+    "email": "soufiane@gmail.com"
+  }
+}
+

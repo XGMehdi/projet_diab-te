@@ -1,0 +1,475 @@
+Pour votre application de prédiction du risque de diabète avec Spring Boot, JWT, historique et SHAP, voici une architecture d’API complète et professionnelle.
+
+Je vais les organiser par module comme dans une vraie application SaaS médicale.
+
+---
+
+# Architecture REST API recommandée
+
+```text id="9om8x0"
+/api
+├── /auth
+├── /users
+├── /predictions
+├── /dashboard
+└── /health
+```
+
+---
+
+# 1. AUTH APIs
+
+Module authentification.
+
+---
+
+## POST `/api/auth/register`
+
+Créer un compte.
+
+### Request
+
+```json id="vkxlyx"
+{
+  "nom": "Elkasraoui",
+  "prenom": "Soufiane",
+  "email": "soufiane@gmail.com",
+  "password": "Password123",
+  "dateNaissance": "2004-08-15"
+}
+```
+
+### Response
+
+```json id="hjwb3g"
+{
+  "message": "Utilisateur créé avec succès"
+}
+```
+
+---
+
+## POST `/api/auth/login`
+
+Connexion utilisateur.
+
+### Request
+
+```json id="4f7r8m"
+{
+  "email": "soufiane@gmail.com",
+  "password": "Password123"
+}
+```
+
+### Response
+
+```json id="0nq6om"
+{
+  "token": "jwt_token_here",
+  "user": {
+    "id": 1,
+    "nom": "Elkasraoui",
+    "prenom": "Soufiane",
+    "email": "soufiane@gmail.com"
+  }
+}
+```
+
+---
+
+## GET `/api/auth/me`
+
+Récupérer l’utilisateur connecté.
+
+### Headers
+
+```text id="f9f8li"
+Authorization: Bearer TOKEN
+```
+
+### Response
+
+```json id="0lq7cl"
+{
+  "id": 1,
+  "nom": "Elkasraoui",
+  "prenom": "Soufiane",
+  "email": "soufiane@gmail.com"
+}
+```
+
+---
+
+# 2. USER APIs
+
+Gestion profil utilisateur.
+
+---
+
+## GET `/api/users/profile`
+
+Récupérer profil.
+
+---
+
+## PUT `/api/users/profile`
+
+Modifier profil.
+
+### Request
+
+```json id="mhrqvr"
+{
+  "nom": "Elkasraoui",
+  "prenom": "Soufiane",
+  "dateNaissance": "2004-08-15"
+}
+```
+
+---
+
+## PUT `/api/users/change-password`
+
+Changer mot de passe.
+
+### Request
+
+```json id="b98ykr"
+{
+  "oldPassword": "OldPass123",
+  "newPassword": "NewPass123"
+}
+```
+
+---
+
+# 3. PREDICTION APIs
+
+Le cœur du projet.
+
+---
+
+## POST `/api/predictions`
+
+Créer une nouvelle prédiction.
+
+Cette API :
+
+* valide les données,
+* appelle le modèle ML,
+* récupère :
+
+  * risk_score
+  * risk_level
+  * shap_values
+* sauvegarde en DB.
+
+---
+
+## Request
+
+```json id="5ytw7f"
+{
+  "highBp": true,
+  "highChol": false,
+  "cholCheck": true,
+  "bmi": 31.2,
+  "smoker": false,
+  "stroke": false,
+  "heartDiseaseOrAttack": false,
+  "physActivity": true,
+  "fruits": true,
+  "veggies": true,
+  "hvyAlcoholConsump": false,
+  "genHlth": 3,
+  "mentHlth": 4,
+  "physHlth": 7,
+  "diffWalk": false,
+  "sex": "MALE",
+  "age": 8
+}
+```
+
+---
+
+## Response
+
+```json id="7u98ul"
+{
+  "predictionId": 12,
+  "riskScore": 0.73,
+  "riskLevel": "HIGH",
+  "shapValues": {
+    "bmi": 0.31,
+    "highBp": 0.22,
+    "genHlth": 0.18,
+    "physActivity": -0.11
+  },
+  "createdAt": "2026-05-09T19:20:00"
+}
+```
+
+---
+
+## GET `/api/predictions`
+
+Historique utilisateur.
+
+### Query Params optionnels
+
+```text id="z9vhhg"
+?page=0
+&size=10
+&sort=createdAt,desc
+```
+
+---
+
+## GET `/api/predictions/{id}`
+
+Détails d’une prédiction.
+
+---
+
+## DELETE `/api/predictions/{id}`
+
+Supprimer une prédiction.
+
+---
+
+# 4. DASHBOARD APIs
+
+Pour graphiques/statistiques.
+
+---
+
+## GET `/api/dashboard/stats`
+
+Statistiques générales utilisateur.
+
+### Response
+
+```json id="d2ny4g"
+{
+  "totalPredictions": 18,
+  "highRiskCount": 5,
+  "moderateRiskCount": 7,
+  "lowRiskCount": 6,
+  "averageRiskScore": 0.48
+}
+```
+
+---
+
+## GET `/api/dashboard/risk-distribution`
+
+Distribution des risques.
+
+### Response
+
+```json id="q4k4jm"
+{
+  "low": 6,
+  "moderate": 7,
+  "high": 5
+}
+```
+
+---
+
+## GET `/api/dashboard/monthly-predictions`
+
+Activité mensuelle.
+
+### Response
+
+```json id="6w2c2s"
+[
+  {
+    "month": "Jan",
+    "count": 4
+  },
+  {
+    "month": "Feb",
+    "count": 7
+  }
+]
+```
+
+---
+
+## GET `/api/dashboard/latest-predictions`
+
+Dernières prédictions.
+
+---
+
+# 5. HEALTH API
+
+---
+
+## GET `/api/health`
+
+Tester backend.
+
+### Response
+
+```json id="n6n7mi"
+{
+  "status": "UP",
+  "timestamp": "2026-05-09T19:30:00"
+}
+```
+
+---
+
+# APIs optionnelles très professionnelles
+
+---
+
+# EXPORT
+
+## GET `/api/predictions/export/pdf`
+
+Exporter historique PDF.
+
+---
+
+## GET `/api/predictions/export/csv`
+
+Exporter CSV.
+
+---
+
+# ADMIN (optionnel)
+
+---
+
+## GET `/api/admin/users`
+
+Tous les utilisateurs.
+
+---
+
+## GET `/api/admin/predictions`
+
+Toutes les prédictions.
+
+---
+
+# ML APIs (si Flask séparé)
+
+Si votre IA est dans Flask/FastAPI :
+
+---
+
+## POST `/ml/predict`
+
+Backend Spring → Flask.
+
+### Request
+
+```json id="91wzgh"
+{
+  "highBp": true,
+  "bmi": 31.2
+}
+```
+
+### Response
+
+```json id="y08rt7"
+{
+  "riskScore": 0.73,
+  "riskLevel": "HIGH",
+  "shapValues": {
+    "bmi": 0.31
+  }
+}
+```
+
+---
+
+# APIs minimum vitales pour commencer
+
+Je vous conseille de développer dans cet ordre :
+
+---
+
+# Phase 1
+
+## Auth
+
+* register
+* login
+* me
+
+---
+
+# Phase 2
+
+## Prediction
+
+* create prediction
+* get history
+* get prediction by id
+
+---
+
+# Phase 3
+
+## Dashboard
+
+* stats
+* charts
+
+---
+
+# Phase 4
+
+## Profile
+
+* update profile
+* change password
+
+---
+
+# APIs probablement inutiles pour PFA
+
+Vous pouvez éviter :
+
+* refresh token
+* email verification
+* forgot password
+* OAuth Google
+* admin panel complet
+
+---
+
+# Architecture finale recommandée
+
+```text id="4x3a9m"
+controller/
+├── AuthController
+├── UserController
+├── PredictionController
+├── DashboardController
+└── HealthController
+```
+
+---
+
+# DTOs recommandés
+
+```text id="dkcw74"
+dto/
+├── auth/
+├── prediction/
+├── dashboard/
+└── user/
+```
+
+---
+
+Votre backend commence maintenant à ressembler à une vraie application médicale moderne.

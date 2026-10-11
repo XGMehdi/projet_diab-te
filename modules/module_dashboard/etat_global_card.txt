@@ -1,0 +1,5 @@
+| Score moyen / dernier score | État global      |
+| --------------------------- | ---------------- |
+| 0–40%                       | Faible / Bon     |
+| 40–70%                      | À surveiller     |
+| 70–100%                     | Élevé / Critique |

@@ -1,0 +1,4 @@
+spring.datasource.password=CHANGE_ME
+spring.mail.username=CHANGE_ME
+spring.mail.password=CHANGE_ME
+app.jwt-secret=CHANGE_ME_TO_A_RANDOM_SECRET_AT_LEAST_32_BYTES
